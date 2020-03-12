@@ -17,6 +17,10 @@ class TransactionModel(db.Model):
     def find_issued_book(cls,book_id):
         return cls.query.filter_by(book_id=book_id,return_date=None).first()
 
+    @classmethod
+    def find_due_book(cls,user_id):
+        return cls.query.filter_by(lent_to=user_id,return_date=None).all()
+
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()

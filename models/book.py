@@ -26,6 +26,10 @@ class BookModel(db.Model):
     def find_by_id(cls, id):
         return cls.query.filter_by(id=id).first()
 
+    @classmethod
+    def find_by_user_id(cls, user_id):
+        return cls.query.filter_by(user_id=user_id).all()
+
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
@@ -37,3 +41,14 @@ class BookModel(db.Model):
     @classmethod
     def find_all(cls):
         return cls.query.all()
+    
+    @classmethod
+    def search_by_category(cls,user_id,category,keyword):
+        key="%{}%".format(keyword)
+        if category=="author":
+            return BookModel.query.filter(BookModel.author.like(key)).filter(BookModel.user_id!=user_id).filter_by(is_borrowed=False).all()
+        if category=="title":
+            return BookModel.query.filter(BookModel.publication.like(key)).filter(BookModel.user_id!=user_id).filter_by(is_borrowed=False).all()
+        if category=="category":
+            return BookModel.query.filter(BookModel.category.like(key)).filter(BookModel.user_id!=user_id).filter_by(is_borrowed=False).all()
+

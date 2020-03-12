@@ -5,6 +5,7 @@ from flask import request
 from db import db
 from schemas.book import BookSchema
 from models.book import BookModel
+from models.transaction import TransactionModel
 
 book_schema = BookSchema()
 book_list_schema = BookSchema(many=True)
@@ -41,3 +42,23 @@ class BookList(Resource):
     @classmethod
     def get(cls):
         return {"books": book_list_schema.dump(BookModel.find_all())}, 200
+
+class DueBooks(Resource):
+    @classmethod
+    def get(cls, user_id):
+        transactions = TransactionModel.find_due_book(user_id)
+        books=[]
+        for transaction in transactions:
+            books.append(transaction.book)
+        return {"books":book_list_schema.dump(books)},200
+
+class UserBookList(Resource):
+    @classmethod
+    def get(cls,user_id):
+        return {"books": book_list_schema.dump(BookModel.find_by_user_id(user_id))}, 200
+
+class BookSearch(Resource):
+    @classmethod
+    def get(cls,user_id,category,keyword):
+        books= BookModel.search_by_category(user_id,category,keyword)
+        return {"books":book_list_schema.dump(books)},200
