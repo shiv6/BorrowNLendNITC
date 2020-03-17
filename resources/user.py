@@ -47,7 +47,7 @@ class UserLogin(Resource):
                 expires = datetime.timedelta(minutes=60)
                 access_token = create_access_token(identity=user.id, fresh=True, expires_delta=expires)
                 refresh_token = create_refresh_token(user.id)
-                return {"access_token": access_token, "refresh_token":refresh_token, "user_id":user.id}, 200
+                return {"access_token": access_token, "refresh_token":refresh_token, "user_id":user.id, "expires_in": 60}, 200
             return {"message": "User not confirmed"}, 400
         return {"message": "user invalid crendential"}, 401
 
