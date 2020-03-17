@@ -37,7 +37,7 @@ class BorrowRequestResponse(Resource):
                 return {"message": "already borrowed"}, 400
             req.book.is_borrowed = True
             req.save_to_db()
-            transaction = TransactionModel(borrow_date=datetime.datetime.now(), borrowed_from=req.sent_by,lent_to = req.received_by,book_id=req.book_id)
+            transaction = TransactionModel(borrow_date=datetime.datetime.now(), borrowed_from=req.received_by,lent_to = req.sent_by,book_id=req.book_id)
             transaction.save_to_db()
             req.delete_from_db()
         else:

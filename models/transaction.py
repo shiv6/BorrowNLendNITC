@@ -1,4 +1,5 @@
 from db import db
+from sqlalchemy import or_
 
 class TransactionModel(db.Model):
     __tablename__="transactions"
@@ -20,6 +21,10 @@ class TransactionModel(db.Model):
     @classmethod
     def find_due_book(cls,user_id):
         return cls.query.filter_by(lent_to=user_id,return_date=None).all()
+
+    @classmethod
+    def find_user_summary(cls,user_id):
+        return cls.query.filter(or_(TransactionModel.borrowed_from==user_id, TransactionModel.lent_to==user_id)).all()
 
     def save_to_db(self):
         db.session.add(self)

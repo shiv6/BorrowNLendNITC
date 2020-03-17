@@ -76,6 +76,23 @@ class User(Resource):
             return {"message": "User not found"}, 404
         user.delete_from_db()
         return {"message": "User deleted"}, 200
+    
+    @classmethod
+    def put(cls, user_id):
+        parser = reqparse.RequestParser()
+        parser.add_argument('name', type=str)
+        parser.add_argument('contact', type=str)
+        parser.add_argument('address', type=str)
+        args = parser.parse_args()
+        user = UserModel.find_by_id(user_id)
+        if not user:
+            return {"message": "user not found"}, 404
+        user.name = args['name']
+        user.contact = args['contact']
+        user.address = args['address']
+        user.save_to_db()
+        return {"message": "Updated"}, 200
+
 
 class UserList(Resource):
     @classmethod

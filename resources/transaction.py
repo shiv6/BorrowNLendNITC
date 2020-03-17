@@ -1,6 +1,6 @@
 import traceback
 from flask_restful import Resource
-import flask import requests
+from flask import request
 
 from db import db
 from schemas.transaction import TransactionSchema
@@ -13,3 +13,8 @@ class TransactionList(Resource):
     @classmethod
     def get(cls):
         return {"transactions": transaction_list_schema.dump(TransactionModel.find_all())}, 200
+
+class TransactionSummary(Resource):
+    @classmethod
+    def get(cls,user_id):
+        return {"transactions": transaction_list_schema.dump(TransactionModel.find_user_summary(user_id))}, 200

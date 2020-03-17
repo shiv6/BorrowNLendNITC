@@ -38,22 +38,24 @@ from resources.book import Book,AddBook, BookList, BookSearch, UserBookList, Due
 from resources.confirmation import Confirmation, ConfirmationByUser
 from resources.borrow_request import BorrowRequest, BorrowRequestList, BorrowRequestResponse
 from resources.return_request import ReturnRequest, ReturnRequestList, ReturnRequestResponse
+from resources.transaction import TransactionSummary
 
 # ADD RESOURCES HERE
+api.add_resource(UserLogin, "/login")
+api.add_resource(UserLogout, "/logout")
+api.add_resource(TokenRefresh, "/refresh")
 api.add_resource(User,'/user/<int:user_id>')
 api.add_resource(UserList, '/users')
 api.add_resource(UserRegister, '/register')
 api.add_resource(Book,'/book/<int:book_id>')
 api.add_resource(BookList,'/books')
 api.add_resource(AddBook,'/book')
+api.add_resource(TransactionSummary,'/user/<int:user_id>/summary')
 api.add_resource(DueBooks,'/user/<int:user_id>/duebooks')
 api.add_resource(UserBookList,'/user/<int:user_id>/books')
 api.add_resource(BookSearch,'/user/<int:user_id>/search/<string:category>/<string:keyword>')
 api.add_resource(Confirmation, "/user_confirmation/<string:confirmation_id>")
 api.add_resource(ConfirmationByUser, "/confirmation/user/<int:user_id>")
-api.add_resource(UserLogin, "/login")
-api.add_resource(UserLogout, "/logout")
-api.add_resource(TokenRefresh, "/refresh")
 api.add_resource(BorrowRequestList,'/user/<int:user_id>/borrowrequests')
 api.add_resource(BorrowRequest,'/borrowrequest')
 api.add_resource(BorrowRequestResponse, '/borrowrequest/<int:request_id>/response')
