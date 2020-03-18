@@ -10,4 +10,5 @@ class BookSchema(ma.ModelSchema):
         sqla_session = db.session
         dump_only = ("id","is_borrowed")
         datetimeformat = "%d-%m-%Y"
-    owner = fields.Nested(UserSchema)
+        include_fk=True
+    owner = fields.Nested(UserSchema(only=("id","name","email")))
