@@ -4,6 +4,7 @@ from flask_jwt_extended import JWTManager
 from marshmallow import ValidationError
 from dotenv import load_dotenv
 from flask_cors import CORS
+import traceback
 
 from db import db
 from ma import ma
@@ -26,6 +27,11 @@ def create_tables():
 @app.errorhandler(ValidationError)
 def handle_marshmallow_validation(err):
     return jsonify(err.messages), 400
+
+@app.errorhandler(500)
+def internal_error(e):
+    traceback.print_exc()
+    return {"message": "internal server error"}, 500
 
 jwt = JWTManager(app)
 

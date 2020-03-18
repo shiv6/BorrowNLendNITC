@@ -7,6 +7,7 @@ from db import db
 from schemas.borrow_request import BorrowRequestSchema
 from models.borrow_request import BorrowRequestModel
 from models.transaction import TransactionModel
+from models.book import BookModel
 
 borrow_request_schema = BorrowRequestSchema()
 borrow_request_list_schema = BorrowRequestSchema(many=True)
@@ -21,7 +22,9 @@ class BorrowRequest(Resource):
     @classmethod
     def post(cls):
         req = borrow_request_schema.load(request.get_json())
-        req.received_by = req.book.user_id
+        req.date = datetime.datetime.now()
+        book = BookModel.find_by_id(req.book_id)
+        req.received_by = book.user_id
         req.save_to_db()
         return {"message": "borrow request sent"}, 200
 
@@ -40,6 +43,7 @@ class BorrowRequestResponse(Resource):
             transaction = TransactionModel(borrow_date=datetime.datetime.now(), borrowed_from=req.received_by,lent_to = req.sent_by,book_id=req.book_id)
             transaction.save_to_db()
             req.delete_from_db()
+            return {"message": "Request Accepted"}, 200
         else:
             req.delete_from_db()
-            return {"message": "Request rejected"}
+            return {"message": "Request rejected"}, 200
