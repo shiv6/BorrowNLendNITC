@@ -15,8 +15,12 @@ class TransactionSchema(ma.ModelSchema):
         dump_only = ("id",)
         datetimeformat = "%d-%m-%Y"
         include_fk=True
-    book = fields.Nested(BookSchema(only=("title","author")))
+    book = fields.Nested(BookSchema(only=("title","author","user_id")))
     borrower = fields.Method("add_borrower_info")
+    lender = fields.Method("add_lender_info")
 
     def add_borrower_info(self, obj):
         return user_schema.dump(UserModel.find_by_id(obj.lent_to))
+
+    def add_lender_info(self, obj):
+        return user_schema.dump(UserModel.find_by_id(obj.borrowed_from))
