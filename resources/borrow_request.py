@@ -24,6 +24,8 @@ class BorrowRequest(Resource):
         req = borrow_request_schema.load(request.get_json())
         req.date = datetime.datetime.now()
         book = BookModel.find_by_id(req.book_id)
+        if BorrowRequestModel.check_if_exist(req.book_id,req.sent_by):
+            return {"message": "already sent"}, 400
         req.received_by = book.user_id
         req.save_to_db()
         return {"message": "borrow request sent"}, 200

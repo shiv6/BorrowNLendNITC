@@ -19,6 +19,13 @@ class BorrowRequestModel(db.Model):
     def find_by_id(cls,id):
         return cls.query.filter_by(id=id).first()
     
+    @classmethod
+    def check_if_exist(cls,book_id,sender_id):
+        req= cls.query.filter_by(sent_by=sender_id,book_id=book_id).first()
+        if req:
+            return True
+        return False
+    
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
