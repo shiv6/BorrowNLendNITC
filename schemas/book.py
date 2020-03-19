@@ -11,4 +11,4 @@ class BookSchema(ma.ModelSchema):
         dump_only = ("id","is_borrowed")
         datetimeformat = "%d-%m-%Y"
         include_fk=True
-    owner = fields.Nested(UserSchema(only=("id","name","email")))
+    owner = fields.Nested(UserSchema(only=("id","name","email","contact")))
