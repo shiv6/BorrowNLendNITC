@@ -16,7 +16,10 @@ class AddBook(Resource):
         book = book_schema.load(request.get_json())
         try:
             book.save_to_db()
-            return {"message": "Book Added"}, 201
+            return {
+                "message": "Book Added",
+                "book_id":book.id
+                }, 201
         except:
             traceback.print_exc()
             book.delete_from_db()
@@ -34,7 +37,9 @@ class Book(Resource):
     def delete(cls, book_id):
         book = BookModel.find_by_id(book_id)
         if not book:
-            return {"message": "Book not found"}, 404    
+            return {"message": "Book not found"}, 404
+        if book.is_borrowed:
+            return {"message": "Borrowed book can\'t be deleted"}, 400
         book.delete_from_db()
         return {"message":"Book deleted"}, 200
 

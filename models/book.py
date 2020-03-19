@@ -16,10 +16,10 @@ class BookModel(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
-    owner = db.relationship("UserModel", back_populates="books")
-    transactions = db.relationship("TransactionModel", back_populates="book")
-    borrow_requests = db.relationship("BorrowRequestModel", back_populates="book")
-    return_requests = db.relationship("ReturnRequestModel",uselist=False, back_populates="book")
+    owner = db.relationship("UserModel",cascade = "all,delete", back_populates="books")
+    transactions = db.relationship("TransactionModel",cascade = "all,delete", back_populates="book")
+    borrow_requests = db.relationship("BorrowRequestModel",cascade = "all,delete", back_populates="book")
+    return_requests = db.relationship("ReturnRequestModel",cascade = "all,delete",uselist=False, back_populates="book")
 
 
     @classmethod
