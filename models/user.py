@@ -13,7 +13,7 @@ class UserModel(db.Model):
     password = db.Column(db.String(80), nullable=False)
     name = db.Column(db.String(80), nullable=False)
     contact = db.Column(db.String(80), nullable=False, unique=True)
-    address = db.Column(db.String(120), nullable=False, unique=True)
+    address = db.Column(db.String(120), nullable=False)
     merit_point = db.Column(db.Integer, default=100)
     is_admin = db.Column(db.Boolean, default=False)
 
@@ -28,7 +28,11 @@ class UserModel(db.Model):
     @classmethod
     def find_by_email(cls, email):
         return cls.query.filter_by(email=email).first()
-    
+
+    @classmethod
+    def find_by_contact(cls, contact):
+        return cls.query.filter_by(contact=contact).first()
+
     @classmethod
     def find_by_id(cls, id):
         return cls.query.filter_by(id=id).first()

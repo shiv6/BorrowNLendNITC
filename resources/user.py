@@ -20,6 +20,9 @@ class UserRegister(Resource):
         if UserModel.find_by_email(user.email):
             return {"message": "Email already exist"}, 400
         
+        if UserModel.find_by_contact(user.contact):
+            return {"message": "contact already registered"}, 400
+
         try:
             user.save_to_db()
             confirmation = ConfirmationModel(user.id)
