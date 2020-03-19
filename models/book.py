@@ -1,6 +1,7 @@
 from db import db
 from models.borrow_request import BorrowRequestModel
 from models.return_request import ReturnRequestModel
+import datetime
 
 class BookModel(db.Model):
     __tablename__="books"
@@ -46,9 +47,9 @@ class BookModel(db.Model):
     def search_by_category(cls,user_id,category,keyword):
         key=f'%{keyword}%'
         if category=="author":
-            return BookModel.query.filter(BookModel.author.like(key)).filter(BookModel.user_id!=user_id).filter_by(is_borrowed=False).all()
+            return BookModel.query.filter(BookModel.author.like(key)).filter(BookModel.user_id!=user_id, BookModel.till_date>datetime.datetime.now()).filter_by(is_borrowed=False).all()
         if category=="title":
-            return BookModel.query.filter(BookModel.title.like(key)).filter(BookModel.user_id!=user_id).filter_by(is_borrowed=False).all()
+            return BookModel.query.filter(BookModel.title.like(key)).filter(BookModel.user_id!=user_id, BookModel.till_date>datetime.datetime.now()).filter_by(is_borrowed=False).all()
         if category=="category":
-            return BookModel.query.filter(BookModel.category.like(key)).filter(BookModel.user_id!=user_id).filter_by(is_borrowed=False).all()
+            return BookModel.query.filter(BookModel.category.like(key)).filter(BookModel.user_id!=user_id, BookModel.till_date>datetime.datetime.now()).filter_by(is_borrowed=False).all()
 

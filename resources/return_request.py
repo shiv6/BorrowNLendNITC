@@ -8,6 +8,7 @@ from schemas.return_request import ReturnRequestSchema
 from models.return_request import ReturnRequestModel
 from models.transaction import TransactionModel
 from models.book import BookModel
+from models.user import UserModel
 
 return_request_schema = ReturnRequestSchema()
 return_request_list_schema = ReturnRequestSchema(many=True)
@@ -49,6 +50,11 @@ class ReturnRequestResponse(Resource):
             if not transaction:
                 return {"message": "transaction not found"}, 404
             transaction.return_date=datetime.datetime.now()
+            if transaction.book.till_date < datetime.datetime.now():
+                interval = transaction.book.till_date - datetime.datetime.now
+                user = UserModel.find_by_id(transaction.lent_to)
+                user.merit_point = user.merit_point + (interval.days+1)*2
+                user.save_to_db()
             transaction.save_to_db()
             req.delete_from_db()
             return {"message": "Accepted request"}, 200

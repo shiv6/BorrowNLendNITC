@@ -8,6 +8,7 @@ from schemas.borrow_request import BorrowRequestSchema
 from models.borrow_request import BorrowRequestModel
 from models.transaction import TransactionModel
 from models.book import BookModel
+from models.user import UserModel
 
 borrow_request_schema = BorrowRequestSchema()
 borrow_request_list_schema = BorrowRequestSchema(many=True)
@@ -24,6 +25,9 @@ class BorrowRequest(Resource):
         req = borrow_request_schema.load(request.get_json())
         req.date = datetime.datetime.now()
         book = BookModel.find_by_id(req.book_id)
+        user = UserModel.find_by_id(req.sent_by)
+        if user.merit_point<=0:
+            return {"message": "your merit points are not enough"}, 400
         if BorrowRequestModel.check_if_exist(req.book_id,req.sent_by):
             return {"message": "already sent"}, 400
         req.received_by = book.user_id
