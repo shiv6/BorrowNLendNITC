@@ -9,7 +9,7 @@ class MailGunException(Exception):
 class Mailgun:
     MAILGUN_DOMAIN = os.environ.get('MAILGUN_DOMAIN')
     MAILGUN_API_KEY = os.environ.get('MAILGUN_API_KEY')
-    FROM_TITLE = 'stores REST API'
+    FROM_TITLE = 'NITC REST API'
     FROM_EMAIL = 'postmaster@sandboxe4d9734075ab496a999328f2ea91a9ea.mailgun.org'
 
     @classmethod

@@ -7,6 +7,7 @@ from flask_jwt_extended import create_access_token, jwt_refresh_token_required, 
 
 from schemas.user import UserSchema
 from models.user import UserModel
+from models.book import BookModel
 from models.confirmation import ConfirmationModel
 
 user_schema = UserSchema()
@@ -96,6 +97,30 @@ class User(Resource):
         user.address = args['address']
         user.save_to_db()
         return {"message": "Updated"}, 200
+
+class UserBlock(Resource):
+    @classmethod
+    def get(cls,block_status,user_id):
+        user = UserModel.find_by_id(user_id)
+        if not user:
+            return {"message": "user not found"}, 404
+        if block_status=='block':
+            user.is_blocked=True
+            user.save_to_db()
+            return {"message": "user Blocked"},200
+        else:
+            user.is_blocked=False
+            user.save_to_db()
+            return {"message": "user Unblocked"}, 200
+
+class UserBlockRequest(Resource):
+    @classmethod
+    def get(cls,book_id):
+        book = BookModel.find_by_id(book_id)
+        if not book:
+            return {"message": "Book not found"}, 404
+        book.owner.send_block_request_email(book)
+        return {"message": "request sent"}, 200
 
 
 class UserList(Resource):

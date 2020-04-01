@@ -39,7 +39,7 @@ jwt = JWTManager(app)
 def check_if_token_in_blacklist(decrypted_token):
     return decrypted_token['jti'] in BLACKLIST
 
-from resources.user import User, UserList, UserRegister, UserLogin, UserLogout, TokenRefresh
+from resources.user import User, UserList, UserRegister, UserLogin, UserLogout, TokenRefresh, UserBlock, UserBlockRequest
 from resources.book import Book,AddBook, BookList, BookSearch, UserBookList, DueBooks
 from resources.confirmation import Confirmation, ConfirmationByUser
 from resources.borrow_request import BorrowRequest, BorrowRequestList, BorrowRequestResponse
@@ -53,6 +53,8 @@ api.add_resource(TokenRefresh, "/refresh")
 api.add_resource(User,'/user/<int:user_id>')
 api.add_resource(UserList, '/users')
 api.add_resource(UserRegister, '/register')
+api.add_resource(UserBlock,'/blocking/<string:block_status>/<int:user_id>')
+api.add_resource(UserBlockRequest,'/block/book/<int:book_id>')
 api.add_resource(Book,'/book/<int:book_id>')
 api.add_resource(BookList,'/books')
 api.add_resource(AddBook,'/book')

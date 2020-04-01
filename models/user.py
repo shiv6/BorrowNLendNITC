@@ -16,6 +16,7 @@ class UserModel(db.Model):
     address = db.Column(db.String(120), nullable=False)
     merit_point = db.Column(db.Integer, default=100)
     is_admin = db.Column(db.Boolean, default=False)
+    is_blocked = db.Column(db.Boolean, default=False)
 
     books = db.relationship("BookModel", back_populates="owner")
     confirmation = db.relationship("ConfirmationModel", lazy="dynamic", cascade="all, delete-orphan")
@@ -44,6 +45,19 @@ class UserModel(db.Model):
         html = f'<html>please click the link to confirm your registration: <a href="{link}">{link}</html>"'
         return Mailgun.send_email([self.email], subject, text, html)
     
+    def send_block_request_email(self,book):
+        block_link = request.url_root[:-1]+ url_for('userblock',block_status='block',user_id=self.id)
+        unblock_link = request.url_root[:-1]+ url_for('userblock',block_status='unblock',user_id=self.id)
+        subject = 'BLOCK/UNBLOCK REQUEST',
+        text = f'please click the link to block user who uploaded book named: {book.title}, {book.author}, {book.publication}: {block_link} , to unblock: {unblock_link}'
+        html = f'<html>please click the link to block user who uploaded book named: {book.title}, {book.author}, {book.publication}: <a href="{block_link}">BLOCK</a> , to unblock: <a href="{unblock_link}">UNBLOCK</a></html>"'
+        return Mailgun.send_email(['sumits7y@gmail.com'], subject, text, html)
+
+    def get_return_request_notification(self):
+        subject = 'New Return Request',
+        text = f'Someone wants to give you your book back.'
+        html = f'<html>Someone wants to give you your book back.</html>'
+        return Mailgun.send_email([self.email], subject, text, html)
 
     def save_to_db(self):
         db.session.add(self)

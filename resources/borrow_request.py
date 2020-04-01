@@ -26,6 +26,8 @@ class BorrowRequest(Resource):
         req.date = datetime.datetime.now()
         book = BookModel.find_by_id(req.book_id)
         user = UserModel.find_by_id(req.sent_by)
+        if user.is_blocked:
+            return {"message": "You are blocked"}, 400
         if user.merit_point<=0:
             return {"message": "your merit points are not enough"}, 400
         if BorrowRequestModel.check_if_exist(req.book_id,req.sent_by):
@@ -41,6 +43,11 @@ class BorrowRequestResponse(Resource):
         req = BorrowRequestModel.find_by_id(request_id)
         if not req:
             return {"message":"no request found"}, 404
+        user=UserModel.find_by_id(req.received_by)
+        if not user:
+            return {"message": "user not found"}, 404
+        if user.is_blocked:
+            return {"message": "You are blocked cant respond"}, 400
         if data['response']:
             if req.book.is_borrowed:
                 return {"message": "already borrowed"}, 400

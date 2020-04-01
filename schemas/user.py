@@ -8,7 +8,7 @@ class UserSchema(ma.ModelSchema):
         model = UserModel
         sqla_session = db.session
         load_only = ("password",)
-        dump_only = ("id","merit_point","is_admin","confirmation")
+        dump_only = ("id","merit_point","is_admin","confirmation","is_blocked")
 
     @pre_dump
     def _pre_dump(self, user, **kwargs):

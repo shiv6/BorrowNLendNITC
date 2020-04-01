@@ -35,6 +35,8 @@ class ReturnRequest(Resource):
             return {"message":"Already sent"},400
         req = ReturnRequestModel(date=datetime.datetime.now(), sent_by=transaction.lent_to, received_by=transaction.borrowed_from, book_id=book_id)
         req.save_to_db()
+        user = UserModel.find_by_id(req.received_by)
+        user.get_return_request_notification()
         return {"message": "Return request sent"}, 200
 
 class ReturnRequestResponse(Resource):
