@@ -53,7 +53,7 @@ class ReturnRequestResponse(Resource):
                 return {"message": "transaction not found"}, 404
             transaction.return_date=datetime.datetime.now()
             if transaction.book.till_date < datetime.datetime.now():
-                interval = transaction.book.till_date - datetime.datetime.now
+                interval = transaction.book.till_date - datetime.datetime.now()
                 user = UserModel.find_by_id(transaction.lent_to)
                 user.merit_point = user.merit_point + (interval.days+1)*2
                 user.save_to_db()
