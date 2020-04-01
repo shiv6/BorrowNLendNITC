@@ -29,11 +29,11 @@ class UserRegister(Resource):
             confirmation = ConfirmationModel(user.id)
             confirmation.confirmed=True
             confirmation.save_to_db()
-            # res = user.send_confirmation_email()
+            res = user.send_confirmation_email()
             return {"message": "User created"}, 201
         except:
             traceback.print_exc()
-            # user.delete_from_db()
+            user.delete_from_db()
             return { "message": "User creating error"}, 500
 
 class UserLogin(Resource):
