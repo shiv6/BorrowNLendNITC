@@ -27,7 +27,7 @@ class UserRegister(Resource):
         try:
             user.save_to_db()
             confirmation = ConfirmationModel(user.id)
-            confirmation.confirmed=True
+            confirmation.confirmed=False
             confirmation.save_to_db()
             res = user.send_confirmation_email()
             return {"message": "User created"}, 201

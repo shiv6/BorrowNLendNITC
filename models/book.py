@@ -46,10 +46,15 @@ class BookModel(db.Model):
     @classmethod
     def search_by_category(cls,user_id,category,keyword):
         key=f'%{keyword}%'
+        books=[]
         if category=="author":
-            return BookModel.query.filter(BookModel.author.ilike(key)).filter(BookModel.user_id!=user_id, BookModel.till_date>datetime.datetime.now()).filter_by(is_borrowed=False).all()
+            books = BookModel.query.filter(BookModel.author.ilike(key)).filter(BookModel.user_id!=user_id, BookModel.till_date>datetime.datetime.now()).filter_by(is_borrowed=False).all()
         if category=="title":
-            return BookModel.query.filter(BookModel.title.ilike(key)).filter(BookModel.user_id!=user_id, BookModel.till_date>datetime.datetime.now()).filter_by(is_borrowed=False).all()
+            books = BookModel.query.filter(BookModel.title.ilike(key)).filter(BookModel.user_id!=user_id, BookModel.till_date>datetime.datetime.now()).filter_by(is_borrowed=False).all()
         if category=="category":
-            return BookModel.query.filter(BookModel.category.ilike(key)).filter(BookModel.user_id!=user_id, BookModel.till_date>datetime.datetime.now()).filter_by(is_borrowed=False).all()
-
+            books = BookModel.query.filter(BookModel.category.ilike(key)).filter(BookModel.user_id!=user_id, BookModel.till_date>datetime.datetime.now()).filter_by(is_borrowed=False).all()
+        retbooks=[]
+        for book in books:
+            if book.owner.is_blocked==False:
+                retbooks.append(book)
+        return retbooks
