@@ -55,9 +55,20 @@ class ReturnRequestResponse(Resource):
             if transaction.book.till_date < datetime.datetime.now():
                 interval = transaction.book.till_date - datetime.datetime.now()
                 user = UserModel.find_by_id(transaction.lent_to)
+                print(user.merit_point)
                 user.merit_point = user.merit_point + (interval.days+1)*2
                 user.save_to_db()
             transaction.save_to_db()
+            switcher={
+                1: -6,
+                2:-4,
+                3:-2,
+                4:0,
+                5:2
+            }
+            user = UserModel.find_by_id(req.sent_by)
+            user.merit_point =user.merit_point+ switcher[data['rating']]
+            user.save_to_db()
             req.delete_from_db()
             return {"message": "Accepted request"}, 200
         else:
