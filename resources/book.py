@@ -5,6 +5,7 @@ from flask import request
 from db import db
 from schemas.book import BookSchema
 from models.book import BookModel
+from models.user import UserModel
 from models.transaction import TransactionModel
 
 book_schema = BookSchema()
@@ -14,7 +15,8 @@ class AddBook(Resource):
     @classmethod
     def post(cls):
         book = book_schema.load(request.get_json())
-        if book.owner.is_blocked:
+        user = UserModel.find_by_id(book.user_id)
+        if user.is_blocked:
             return { "message": "Your are blocked cannot add book"}, 400
         try:
             book.save_to_db()
