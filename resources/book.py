@@ -14,6 +14,8 @@ class AddBook(Resource):
     @classmethod
     def post(cls):
         book = book_schema.load(request.get_json())
+        if book.owner.is_blocked:
+            return { "message": "Your are blocked cannot add book"}, 400
         try:
             book.save_to_db()
             return {
