@@ -1,10 +1,11 @@
 from flask import Flask, jsonify
-from flask_restful import Api
+from flask_restful import Api, Resource
 from flask_jwt_extended import JWTManager
 from marshmallow import ValidationError
 from dotenv import load_dotenv
 from flask_cors import CORS
 import traceback
+import smtplib
 
 from db import db
 from ma import ma
@@ -47,6 +48,27 @@ from resources.return_request import ReturnRequest, ReturnRequestList, ReturnReq
 from resources.transaction import TransactionSummary,CheckAlert
 
 # ADD RESOURCES HERE
+
+class SendMail(Resource):
+    @classmethod
+    def get(cls):
+        sender = 'hello@nakshatra20.com'
+        receivers = ['careeratedjing@gmail.com']
+
+        message = """From: From Person <from@fromdomain.com>
+        To: To Person <to@todomain.com>
+        Subject: SMTP e-mail test
+
+        This is a test e-mail message.
+        """
+        try:
+            smtpObj = smtplib.SMTP('localhost')
+            smtpObj.sendmail(sender, receivers, message)         
+            return {"message":"sent success"},200
+        except:
+            return {"message":"sent failed"},400
+
+api.add_resource(SendMail,"/sendmail")
 api.add_resource(UserLogin, "/login")
 api.add_resource(UserLogout, "/logout")
 api.add_resource(TokenRefresh, "/refresh")
